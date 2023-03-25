@@ -1,5 +1,7 @@
 # RSA Encryption and Decryption
 
+This repository contains a tutorial on how to implement RSA encryption and decryption algorithms in Python.
+
 In order to guarantee user privacy and secure data transmission, encryption methods are used.
 Information that has been encrypted is changed from plain text to a secret code that can only be accessed by the intended person.
 A user of RSA creates a public key using two large prime numbers and a random integer, then makes it public. This public key for cryptography is accessible to anyone.
