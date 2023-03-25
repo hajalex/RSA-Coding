@@ -1,4 +1,4 @@
-# RSA Encryption Algorithm
+# RSA Encryption and Decryption
 
 In order to guarantee user privacy and secure data transmission, encryption methods are used.
 Information that has been encrypted is changed from plain text to a secret code that can only be accessed by the intended person.
