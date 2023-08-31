@@ -7,8 +7,6 @@ Information that has been encrypted is changed from plain text to a secret code 
 A user of RSA creates a public key using two large prime numbers and a random integer, then makes it public. This public key for cryptography is accessible to anyone.
 However, the message can only be decoded by someone who is aware of the first two numbers on which the key is founded. There is no known way to circumvent this mechanism.
 
-# RSA Encryption and Decryption in Python
-
 This repository contains a Python implementation of the RSA encryption and decryption algorithm. RSA is a widely used asymmetric encryption algorithm that allows secure transmission of data over an insecure channel.
 
 ## How It Works
