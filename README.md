@@ -23,6 +23,8 @@ The script provides functions for generating key pairs, encrypting messages, and
 2. Run the script using a Python interpreter.
 3. Follow the prompts to generate keys, input your message, and see the encryption and decryption process.
 
+![image](https://github.com/hajalex/RSA-Encryption-Python/assets/112249748/eb7dabfe-a9af-452a-b111-37ba3951e5c5)
+
 ## Example
 
 ```python
