@@ -1,109 +1,135 @@
 import random
-from random import randint
 
 def isprime(n):
-    # تشخیص عدد اول
+    """
+    Checks if a number is prime.
+
+    Args:
+        n: The number to check.
+
+    Returns:
+        True if n is prime, False otherwise.
+    """
     if n <= 1:
         return False
     elif n <= 3:
         return True
-    if (n % 2 == 0 or n % 3 == 0):
+    if n % 2 == 0 or n % 3 == 0:
         return False
     i = 5
-    while (i * i <= n):
-        if (n % i == 0 or n % (i + 2) == 0):
+    while i * i <= n:
+        if n % i == 0 or n % (i + 2) == 0:
             return False
-        i = i + 6
+        i += 6
     return True
 
 # ============================================================================= #
 
 def gcd(a, b):
-    # محاسبه ب.م.م از طریق الگوریتم اقلیدوسی
+    """
+    Calculates the greatest common divisor (GCD) of two numbers using the Euclidean algorithm.
+
+    Args:
+        a: The first number.
+        b: The second number.
+
+    Returns:
+        The GCD of a and b.
+    """
     if b == 0:
         return a
     else:
         return gcd(b, a % b)
-    
+
 # ============================================================================= #
 
 def mod_inverse(a, m):
-    # محاسبه وارون ضربی پیمانه ای
-    # باقیمانده‌ی حاصلضرب e*d به n = 1
+    """
+    Calculates the modular multiplicative inverse of a number a mod m.
+
+    Args:
+        a: The number.
+        m: The modulus.
+
+    Returns:
+        The modular inverse of a modulo m, or -1 if no inverse exists.
+    """
     for x in range(1, m):
         if (a * x) % m == 1:
             return x
     return -1
 
-# دو عدد تصادفی انتخاب میکنیم
-p = randint(1, 1000)
-q = randint(1, 1000)
-
 # ============================================================================= #
 
-def generate_keypair(p, q):
-    # keysize : طول کلید
-    # x << y برابر است با x * 2**y
+def generate_keypair():
+    """
+    Generates a pair of public and private keys for RSA encryption.
 
-    primes = []
-    for i in range(1, 1000, 1):
-        if isprime(i) == True:
-            primes.append(i)
-
-    # از بین اعداد اول تولید شده دو عدد تصادفی انتخاب میکنیم
-    while primes != []:
-        p = random.choice(primes)
-        primes.remove(p)  # p != q
-        q = random.choice(primes)
-        break
-    print(f"p:{p} , q:{q}")
+    Returns:
+        A tuple containing the public key and the private key.
+    """
+    primes = [i for i in range(1, 1000) if isprime(i)]
+    p = random.choice(primes)
+    primes.remove(p)
+    q = random.choice(primes)
     n = p * q
     t = (p - 1) * (q - 1)
-    # φ(n) = lcm (p-1 ,q-1) = |(p-1)*(q-1)| / gcd(p-1,q-1)
-
+    
     while True:
-        #  1 < e < phi(n) and gcd(e,phi) = 1
-        # اگه ب.م.م دو عدد یک باشه میگیم این دو عدد نسبت به هم اولند 
         e = random.randrange(1, t)
         g = gcd(e, t)
-        # d*e ≡ 1 (mod n)
         d = mod_inverse(e, t)
         if g == 1 and e != d:
             break
-
-    # public key = (e , n)
-    # private key = (d , n)
-    # e ~ encryption
-    # d ~ decryption
-
-    return ((e, n), (d, n))
+            
+    public_key = (e, n)
+    private_key = (d, n)
+    return public_key, private_key
 
 # ============================================================================= #
 
-def encrypt(Massage, package):
-    # c = m^e  mod n
-    # pow(base, exp, mod) -> base^exp % mod
-    e, n = package
-    msg_secrettext = [pow(ord(x), e, n) for x in Massage]
-    return msg_secrettext
+def encrypt(message, public_key):
+    """
+    Encrypts a message using RSA encryption.
+
+    Args:
+        message: The message to be encrypted.
+        public_key: The public key (e, n).
+
+    Returns:
+        A list of encrypted values representing the encrypted message.
+    """
+    e, n = public_key
+    encrypted_message = [pow(ord(x), e, n) for x in message]
+    return encrypted_message
 
 # ============================================================================= #
 
-def decrypt(msg_secrettext, package):
-    # m = c^d  mod n
-    d, n = package
-    Massage = [chr(pow(x, d, n)) for x in msg_secrettext]
-    return (''.join(Massage))
+def decrypt(encrypted_message, private_key):
+    """
+    Decrypts an encrypted message using RSA decryption.
+
+    Args:
+        encrypted_message: The encrypted message.
+        private_key: The private key (d, n).
+
+    Returns:
+        The decrypted message as a string.
+    """
+    d, n = private_key
+    decrypted_message = [chr(pow(x, d, n)) for x in encrypted_message]
+    return ''.join(decrypted_message)
 
 # ============================================================================= #
 
 print(" ... ")
-public, private = generate_keypair(p, q)
+public, private = generate_keypair()
 print(f"Public Key : {public}")
 print(f"Private Key : {private}")
-msg = input("Write Your Msg: ")
-print([ord(i) for i in msg])
-encrypted_msg = encrypt(msg, public)
-print(encrypted_msg)
-print(f"Encrypted msg :> {''.join(map(lambda x: str(x), encrypted_msg))} ")
-print(f"Decrypted msg :> {decrypt(encrypted_msg, private)} ")
+message = input("Write Your Msg: ")
+print([ord(i) for i in message])
+encrypted_message = encrypt(message, public)
+print(encrypted_message)
+encrypted_message_str = ''.join(map(lambda x: str(x), encrypted_message))
+print(f"Encrypted msg :> {encrypted_message_str} ")
+print(f"Decrypted msg :> {decrypt(encrypted_message, private)} ")
